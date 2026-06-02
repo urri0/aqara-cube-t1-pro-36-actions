@@ -1,0 +1,13 @@
+{
+  "domain": "aqara_cube_t1_pro_36_actions",
+  "name": "Aqara Cube T1 Pro 36 Actions",
+  "codeowners": ["@urri0"],
+  "config_flow": true,
+  "dependencies": ["mqtt"],
+  "documentation": "https://github.com/urri0/aqara-cube-t1-pro-36-actions",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/urri0/aqara-cube-t1-pro-36-actions/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

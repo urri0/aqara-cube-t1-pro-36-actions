@@ -1,0 +1,48 @@
+clear_history:
+  name: Clear cube event history
+  description: Clear event history for one cube or for all configured cubes.
+  fields:
+    entry_id:
+      name: Config entry ID
+      description: Optional Home Assistant config entry ID. If omitted, all cube histories are cleared.
+      required: false
+      selector:
+        text:
+
+test_action:
+  name: Test cube action
+  description: Simulate an action for a configured cube. Useful for testing side/action mappings without touching the cube.
+  fields:
+    entry_id:
+      name: Config entry ID
+      required: true
+      selector:
+        text:
+    side:
+      name: Side
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 6
+          mode: box
+    action:
+      name: Action
+      required: true
+      selector:
+        select:
+          options:
+            - rotate_left
+            - rotate_right
+            - tap
+            - slide
+            - shake
+            - throw
+    angle:
+      name: Angle
+      required: false
+      selector:
+        number:
+          min: -360
+          max: 360
+          mode: box

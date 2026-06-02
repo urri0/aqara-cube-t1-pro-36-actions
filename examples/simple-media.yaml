@@ -1,0 +1,8 @@
+# Example custom action JSON values for Media profile / Custom profile
+
+rotate_left: '{"service":"media_player.volume_down","target":{"entity_id":"media_player.main_receiver"}}'
+rotate_right: '{"service":"media_player.volume_up","target":{"entity_id":"media_player.main_receiver"}}'
+tap: '{"service":"media_player.volume_mute","target":{"entity_id":"media_player.main_receiver"},"data":{"is_volume_muted":true}}'
+slide: '{"service":"media_player.media_next_track","target":{"entity_id":"media_player.main_receiver"}}'
+shake: '{"service":"media_player.media_play_pause","target":{"entity_id":"media_player.main_receiver"}}'
+throw: '{"service":"media_player.media_stop","target":{"entity_id":"media_player.main_receiver"}}'

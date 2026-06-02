@@ -1,0 +1,8 @@
+# Example custom action JSON values for Light profile / Custom profile
+
+rotate_left: '{"service":"light.turn_on","target":{"entity_id":"light.room_light"},"data":{"brightness_step_pct":-10}}'
+rotate_right: '{"service":"light.turn_on","target":{"entity_id":"light.room_light"},"data":{"brightness_step_pct":10}}'
+tap: '{"service":"light.toggle","target":{"entity_id":"light.room_light"}}'
+slide: '{"service":"scene.turn_on","target":{"entity_id":"scene.room_evening"}}'
+shake: '{"service":"light.turn_on","target":{"entity_id":"light.room_light"},"data":{"brightness_pct":100}}'
+throw: '{"service":"light.turn_off","target":{"entity_id":"light.room_light"}}'

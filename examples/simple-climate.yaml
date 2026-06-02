@@ -1,0 +1,8 @@
+# Example custom action JSON values for Climate profile / Custom profile
+
+rotate_left: '{"service":"climate.set_temperature","target":{"entity_id":"climate.room_ac"},"data":{"temperature":23}}'
+rotate_right: '{"service":"climate.set_temperature","target":{"entity_id":"climate.room_ac"},"data":{"temperature":25}}'
+tap: '{"service":"climate.set_hvac_mode","target":{"entity_id":"climate.room_ac"},"data":{"hvac_mode":"cool"}}'
+slide: '{"service":"climate.set_fan_mode","target":{"entity_id":"climate.room_ac"},"data":{"fan_mode":"auto"}}'
+shake: '{"service":"climate.set_hvac_mode","target":{"entity_id":"climate.room_ac"},"data":{"hvac_mode":"cool"}}'
+throw: '{"service":"climate.set_hvac_mode","target":{"entity_id":"climate.room_ac"},"data":{"hvac_mode":"off"}}'

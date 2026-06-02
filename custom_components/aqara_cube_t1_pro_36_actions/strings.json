@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Aqara Cube T1 Pro 36 Actions",
+        "description": "Configure Aqara Cube T1 Pro via Zigbee2MQTT. {hint}",
+        "data": {
+          "mqtt_topic": "MQTT topic",
+          "friendly_name": "Display name",
+          "external_side_1": "Side 1 is already handled externally",
+          "external_side_2": "Side 2 is already handled externally",
+          "external_side_3": "Side 3 is already handled externally",
+          "external_side_4": "Side 4 is already handled externally",
+          "external_side_5": "Side 5 is already handled externally",
+          "external_side_6": "Side 6 is already handled externally"
+        }
+      }
+    },
+    "error": {
+      "topic_format": "Topic should look like zigbee2mqtt/<friendly_name>"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Aqara Cube T1 Pro 36 Actions options",
+        "data": {
+          "section": "Section"
+        }
+      },
+      "mqtt": {
+        "title": "MQTT topic / cube name",
+        "description": "{note}",
+        "data": {
+          "mqtt_topic": "MQTT topic",
+          "friendly_name": "Display name"
+        }
+      },
+      "side_1": {"title": "Configure Side 1", "description": "Configure side {side}. {custom_help}"},
+      "side_2": {"title": "Configure Side 2", "description": "Configure side {side}. {custom_help}"},
+      "side_3": {"title": "Configure Side 3", "description": "Configure side {side}. {custom_help}"},
+      "side_4": {"title": "Configure Side 4", "description": "Configure side {side}. {custom_help}"},
+      "side_5": {"title": "Configure Side 5", "description": "Configure side {side}. {custom_help}"},
+      "side_6": {"title": "Configure Side 6", "description": "Configure side {side}. {custom_help}"},
+      "diagnostics": {"title": "Diagnostics and debounce"}
+    }
+  }
+}
