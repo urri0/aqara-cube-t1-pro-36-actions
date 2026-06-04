@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Home Assistant local/runtime files
+.storage/
+.cloud/
+deps/
+tts/
+.homeassistant/
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

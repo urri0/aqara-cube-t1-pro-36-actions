@@ -4,7 +4,7 @@ from __future__ import annotations
 
 DOMAIN = "aqara_cube_t1_pro_36_actions"
 NAME = "Aqara Cube T1 Pro 36 Actions"
-VERSION = "0.1.0"
+VERSION = "0.1.1-test"
 
 CONF_MQTT_TOPIC = "mqtt_topic"
 CONF_FRIENDLY_NAME = "friendly_name"

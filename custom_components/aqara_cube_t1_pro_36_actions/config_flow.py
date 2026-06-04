@@ -62,7 +62,7 @@ def _default_options(external_sides: list[int] | None = None) -> dict[str, Any]:
 class AqaraCube36ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow."""
 
-    VERSION = 1
+    VERSION = 2
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
         """Create integration from UI."""
@@ -116,7 +116,9 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
     """Options flow."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
+        # Home Assistant exposes config_entry as a read-only property on OptionsFlow.
+        # Do not assign to self.config_entry; keep our own private reference.
+        self._config_entry = config_entry
         self.options = deepcopy(config_entry.options or _default_options())
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
@@ -166,8 +168,8 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
 
         schema = vol.Schema(
             {
-                vol.Optional(CONF_MQTT_TOPIC, default=self.config_entry.data.get(CONF_MQTT_TOPIC, "")): str,
-                vol.Optional(CONF_FRIENDLY_NAME, default=self.config_entry.data.get(CONF_FRIENDLY_NAME, self.config_entry.title)): str,
+                vol.Optional(CONF_MQTT_TOPIC, default=self._config_entry.data.get(CONF_MQTT_TOPIC, "")): str,
+                vol.Optional(CONF_FRIENDLY_NAME, default=self._config_entry.data.get(CONF_FRIENDLY_NAME, self._config_entry.title)): str,
             }
         )
         return self.async_show_form(

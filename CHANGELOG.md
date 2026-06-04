@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.1-test
+
+### Fixed
+- Fixed Home Assistant options flow crash: `AttributeError: property config_entry has no setter`.
+- Added safe diagnostic entity naming with `cube36_` prefix to avoid collisions with existing user helpers/entities.
+- Added `.gitignore` for Python cache and local Home Assistant runtime files.
+
 ## 0.1.0-test
 
 - Initial test build.

@@ -39,6 +39,9 @@ class Cube36Sensor(SensorEntity):
             native_unit_of_measurement=cfg.get("unit"),
         )
         self._attr_unique_id = f"{runtime.entry_id}_{key}"
+        # Force a safe namespace for diagnostic sensors. This avoids collisions with
+        # existing user helpers/packages such as sensor/input_text.aqara_cube_t1_pro_*.
+        self._attr_suggested_object_id = f"{runtime.entity_prefix}_{key}"
         self._attr_device_info = runtime.device_info
         self._remove_listener = None
 

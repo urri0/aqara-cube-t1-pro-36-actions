@@ -13,6 +13,7 @@ from typing import Any
 from homeassistant.components import mqtt
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.util import slugify
 
 from .const import (
     ACTIONS,
@@ -93,13 +94,18 @@ class CubeRuntime:
         return merged
 
     @property
+    def entity_prefix(self) -> str:
+        """Stable suggested entity prefix, independent from existing helpers."""
+        return f"cube36_{slugify(self.name)}"
+
+    @property
     def device_info(self) -> DeviceInfo:
         return DeviceInfo(
             identifiers={(DOMAIN, self.entry_id)},
             name=self.name,
             manufacturer="Aqara / Lumi",
             model="Aqara Cube T1 Pro",
-            sw_version="36 Actions 0.1.0",
+            sw_version="36 Actions 0.1.1-test",
         )
 
     async def async_start(self) -> None:
