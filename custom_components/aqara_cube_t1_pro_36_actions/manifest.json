@@ -9,5 +9,5 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/urri0/aqara-cube-t1-pro-36-actions/issues",
   "requirements": [],
-  "version": "0.1.1-test"
+  "version": "0.1.2-test"
 }

@@ -38,9 +38,12 @@ class Cube36Sensor(SensorEntity):
             icon=cfg.get("icon"),
             native_unit_of_measurement=cfg.get("unit"),
         )
-        self._attr_unique_id = f"{runtime.entry_id}_{key}"
-        # Force a safe namespace for diagnostic sensors. This avoids collisions with
-        # existing user helpers/packages such as sensor/input_text.aqara_cube_t1_pro_*.
+        # v0.1.2-test: include the public cube36 namespace in unique_id too.
+        # Home Assistant keeps old entity_id values in the entity registry for the
+        # same unique_id, so changing only suggested_object_id is not enough after
+        # an earlier test install. This intentionally creates clean diagnostic
+        # entities like sensor.cube36_<cube_name>_last_action.
+        self._attr_unique_id = f"{runtime.entry_id}_{runtime.entity_prefix}_{key}"
         self._attr_suggested_object_id = f"{runtime.entity_prefix}_{key}"
         self._attr_device_info = runtime.device_info
         self._remove_listener = None

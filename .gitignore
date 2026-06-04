@@ -3,19 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Home Assistant local/runtime files
-.storage/
-.cloud/
-deps/
-tts/
-.homeassistant/
-*.db
-*.db-shm
-*.db-wal
-*.log
-
 # OS / editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Home Assistant local junk
+.storage/
+.cloud/
+deps/
+tts/
+*.db
+*.db-shm
+*.db-wal
+*.log

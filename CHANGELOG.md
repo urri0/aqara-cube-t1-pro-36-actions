@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.2-test
+
+### Fixed
+- Force diagnostic sensor unique IDs to include the `cube36_` namespace so Home Assistant creates clean entity IDs after previous test installs.
+- Confirm Options Flow uses private `_config_entry` storage instead of assigning to Home Assistant's read-only `config_entry` property.
+- Removed Python `__pycache__` files from the release archive.
+
+Expected new diagnostic entity format:
+
+```text
+sensor.cube36_<cube_name>_last_action
+sensor.cube36_<cube_name>_active_side
+sensor.cube36_<cube_name>_last_angle
+sensor.cube36_<cube_name>_event_history
+```
+
 ## v0.1.1-test
 
 ### Fixed
