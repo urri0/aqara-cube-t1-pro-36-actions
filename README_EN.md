@@ -416,3 +416,19 @@ This is a community Home Assistant custom integration.
 ## License
 
 MIT License.
+
+
+## v0.1.5-test note
+
+The Lovelace debug/training card is now single-entity based. Use the `*_last_action` sensor as the only configured entity; the card reads side, angle, radio, battery and history from its attributes.
+
+Recommended card YAML:
+
+```yaml
+type: custom:aqara-cube-36-debug-card
+entity: sensor.cube36_aqara_cube_t1_pro_last_action
+show_help: true
+history_size: 5
+```
+
+If the integration static card path does not load, copy `aqara-cube-36-debug-card.js` to `/config/www/` and add `/local/aqara-cube-36-debug-card.js` as a JavaScript module dashboard resource.

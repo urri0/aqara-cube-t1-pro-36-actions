@@ -27,3 +27,15 @@ Check Zigbee2MQTT friendly_name and manually enter:
 ```text
 zigbee2mqtt/<friendly_name>
 ```
+
+
+## Debug card shows #0 while backend sensors update
+
+Use v0.1.5-test or later. The card must be configured with the `*_last_action` sensor and reads all data from its attributes.
+
+```yaml
+type: custom:aqara-cube-36-debug-card
+entity: sensor.cube36_aqara_cube_t1_pro_last_action
+show_help: true
+history_size: 5
+```

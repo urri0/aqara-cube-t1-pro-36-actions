@@ -1,36 +1,126 @@
 # Changelog
 
-## v0.1.2-test
+## [0.1.5-test] - 2026-06-04
 
 ### Fixed
-- Force diagnostic sensor unique IDs to include the `cube36_` namespace so Home Assistant creates clean entity IDs after previous test installs.
-- Confirm Options Flow uses private `_config_entry` storage instead of assigning to Home Assistant's read-only `config_entry` property.
-- Removed Python `__pycache__` files from the release archive.
+- Reworked the Lovelace debug/training card to use single-entity mode.
+- The card now reads all diagnostic data from attributes of the configured `*_last_action` sensor instead of relying on fragile sibling entity name guessing.
+- Added full diagnostic attributes to the `last_action` sensor:
+  - `active_side`
+  - `last_side`
+  - `last_from_side`
+  - `last_angle`
+  - `last_lqi`
+  - `battery`
+  - `voltage`
+  - `operation_mode`
+  - `event_count`
+  - `last_event_time`
+  - `event_history`
 
-Expected new diagnostic entity format:
+### Changed
+- Backend MQTT/event handling is intentionally left unchanged because it was already working in v0.1.4-test.
+- Diagnostic sibling sensors are still created for the Home Assistant device page, but the debug card no longer depends on them.
+- Manifest/version bumped to `0.1.5-test`.
 
-```text
-sensor.cube36_<cube_name>_last_action
-sensor.cube36_<cube_name>_active_side
-sensor.cube36_<cube_name>_last_angle
-sensor.cube36_<cube_name>_event_history
+### Notes
+- Recommended card YAML:
+
+```yaml
+type: custom:aqara-cube-36-debug-card
+entity: sensor.cube36_aqara_cube_t1_pro_last_action
+show_help: true
+history_size: 5
 ```
 
-## v0.1.1-test
+- Current reliable frontend deployment method:
+  copy `aqara-cube-36-debug-card.js` to `/config/www/`
+  and add dashboard resource `/local/aqara-cube-36-debug-card.js` as JavaScript module.
+
+---
+
+## [0.1.4-test] - 2026-06-04
+
+### Added
+- First visually working test state of the integration.
+- Lovelace debug/training card tested successfully through manual `/config/www` deployment.
 
 ### Fixed
-- Fixed Home Assistant options flow crash: `AttributeError: property config_entry has no setter`.
-- Added safe diagnostic entity naming with `cube36_` prefix to avoid collisions with existing user helpers/entities.
-- Added `.gitignore` for Python cache and local Home Assistant runtime files.
+- Integration setup/options no longer crashes with previous `config_entry` / `mappingproxy` errors.
+- Options Flow became usable in Home Assistant 2026 / Python 3.14 test environment.
 
-## 0.1.0-test
+### Known issues
+- Integration static path for Lovelace card did not work in the tested setup.
+- Working fallback:
+  copy `aqara-cube-36-debug-card.js` to `/config/www/`
+  and add dashboard resource:
+  `/local/aqara-cube-36-debug-card.js`
 
-- Initial test build.
-- UI config flow.
-- Per-side External / Managed / Disabled modes.
-- Media, Light, Climate and Custom profiles.
+---
+
+## [0.1.3-test] - 2026-06-04
+
+### Fixed
+- Fixed Options Flow crash caused by Home Assistant returning read-only `mappingproxy` options.
+- Reworked internal options handling:
+  - no direct `deepcopy(config_entry.options)`
+  - options converted into normal mutable dictionaries
+  - internal options variable renamed away from HA reserved/read-only properties
+
+### Changed
+- Continued work on safer diagnostic entity naming.
+- Added stronger `cube36_` naming attempt for diagnostic entities.
+
+---
+
+## [0.1.2-test] - 2026-06-04
+
+### Fixed
+- Additional attempt to fix Options Flow crash.
+- Removed Python `__pycache__` from generated test archive.
+- Added `.gitignore`.
+
+### Changed
+- Attempted to force `cube36_` prefix into diagnostic entity names.
+
+---
+
+## [0.1.1-test] - 2026-06-04
+
+### Fixed
+- Fixed first Options Flow crash:
+  `AttributeError: property 'config_entry' of 'AqaraCube36OptionsFlow' object has no setter`
+- Reworked Options Flow to avoid writing to read-only `config_entry`.
+
+### Changed
+- Started moving diagnostic entity naming toward `cube36_` prefix.
+- Added `.gitignore`.
+- Removed generated Python cache files from the intended repository structure.
+
+---
+
+## [0.1.0-test] - 2026-06-04
+
+### Added
+- Initial public test version.
+- UI-based Home Assistant custom integration skeleton.
+- Zigbee2MQTT MQTT topic input.
+- Aqara Cube T1 Pro event listener.
+- Side model:
+  - External
+  - Managed
+  - Disabled
+- Core concept:
+  `side = context`
+  `action = command inside context`
+- Initial profiles:
+  - Media
+  - Light
+  - Climate
+  - Custom
 - Diagnostic sensors.
-- MQTT action listener for Aqara Cube T1 Pro via Zigbee2MQTT.
 - Companion Lovelace debug/training card.
+- English/Russian README.
+- Initial documentation and examples.
 - Local brand assets.
-- Polished bilingual README: English and Russian project description, purpose, gesture training and tested scenarios.
+- HACS-ready repository structure.

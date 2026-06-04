@@ -13,7 +13,9 @@ class AqaraCube36DebugCard extends HTMLElement {
   }
 
   static getStubConfig(hass) {
-    const entity = Object.keys(hass.states).find((e) => e.startsWith('sensor.') && e.endsWith('_last_action')) || '';
+    const entity = Object.keys(hass.states).find((e) =>
+      e.startsWith('sensor.') && e.includes('cube36') && e.endsWith('_last_action')
+    ) || Object.keys(hass.states).find((e) => e.startsWith('sensor.') && e.endsWith('_last_action')) || '';
     return { entity, show_help: true, history_size: 5 };
   }
 
@@ -32,8 +34,8 @@ class AqaraCube36DebugCard extends HTMLElement {
 
   _baseEntity() {
     const entity = this.config.entity;
-    if (entity.endsWith('_last_action')) return entity.replace(/_last_action$/, '');
-    return entity;
+    if (entity && entity.endsWith('_last_action')) return entity.replace(/_last_action$/, '');
+    return entity || '';
   }
 
   _sensor(suffix) {
@@ -41,10 +43,32 @@ class AqaraCube36DebugCard extends HTMLElement {
     return `${base}_${suffix}`;
   }
 
-  _value(suffix, fallback = '—') {
-    const st = this._state(this._sensor(suffix));
-    if (!st || ['unknown', 'unavailable', 'none', 'None', ''].includes(st.state)) return fallback;
-    return st.state;
+  _clean(value, fallback = '—') {
+    if (value === undefined || value === null) return fallback;
+    const str = String(value);
+    if (['unknown', 'unavailable', 'none', 'None', ''].includes(str)) return fallback;
+    return value;
+  }
+
+  _main() {
+    return this._state(this.config.entity);
+  }
+
+  _attr(name, fallback = '—') {
+    const main = this._main();
+    const value = main?.attributes?.[name];
+    if (value !== undefined && value !== null && !['unknown', 'unavailable', 'none', 'None', ''].includes(String(value))) {
+      return value;
+    }
+
+    // Backward-compatible fallback for older test builds:
+    // if attributes are missing, try the sibling diagnostic sensor.
+    const st = this._state(this._sensor(name));
+    return this._clean(st?.state, fallback);
+  }
+
+  _mainValue(fallback = '—') {
+    return this._clean(this._main()?.state, fallback);
   }
 
   _actionStyle(action) {
@@ -60,20 +84,39 @@ class AqaraCube36DebugCard extends HTMLElement {
   render() {
     if (!this._hass || !this.config) return;
 
-    const action = this._value('last_action');
-    const side = this._value('last_side');
-    const activeSide = this._value('active_side');
-    const fromSide = this._value('last_from_side');
-    const angle = this._value('last_angle');
-    const lqi = this._value('last_lqi');
-    const battery = this._value('battery');
-    const voltage = this._value('voltage');
-    const mode = this._value('operation_mode');
-    const eventCount = this._value('event_count', '0');
-    const lastTime = this._value('last_event_time');
-    const historyEntity = this._state(this._sensor('event_history'));
-    const history = historyEntity?.attributes?.history || [];
-    const [icon, background] = this._actionStyle(action);
+    const main = this._main();
+    if (!main) {
+      this.innerHTML = `
+        <ha-card>
+          <div class="cube-card">
+            <div class="cube-title">AQARA CUBE T1 PRO</div>
+            <div class="cube-empty">Entity not found: ${this._escape(this.config.entity)}</div>
+          </div>
+        </ha-card>
+        <style>${this._styles()}</style>
+      `;
+      return;
+    }
+
+    const action = this._mainValue();
+    const side = this._attr('last_side');
+    const activeSide = this._attr('active_side');
+    const fromSide = this._attr('last_from_side');
+    const angle = this._attr('last_angle');
+    const lqi = this._attr('last_lqi');
+    const battery = this._attr('battery');
+    const voltage = this._attr('voltage');
+    const mode = this._attr('operation_mode');
+    const eventCount = this._attr('event_count', '0');
+    const lastTime = this._attr('last_event_time');
+
+    let history = main.attributes?.event_history;
+    if (!Array.isArray(history)) {
+      const historyEntity = this._state(this._sensor('event_history'));
+      history = historyEntity?.attributes?.history || [];
+    }
+
+    const [icon, background] = this._actionStyle(String(action));
 
     const historyRows = (history || [])
       .slice(0, Number(this.config.history_size || 5))
@@ -191,7 +234,9 @@ class AqaraCube36DebugCard extends HTMLElement {
   }
 }
 
-customElements.define('aqara-cube-36-debug-card', AqaraCube36DebugCard);
+if (!customElements.get('aqara-cube-36-debug-card')) {
+  customElements.define('aqara-cube-36-debug-card', AqaraCube36DebugCard);
+}
 
 window.customCards = window.customCards || [];
 window.customCards.push({

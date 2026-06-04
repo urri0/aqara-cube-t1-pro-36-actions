@@ -425,3 +425,19 @@ Aqara Cube T1 Pro является названием продукта / тор�
 ## Лицензия
 
 MIT License.
+
+
+## Примечание v0.1.5-test
+
+Lovelace debug/training card теперь работает в single-entity режиме. В карточку указывается только `*_last_action` sensor; остальные данные — side, angle, radio, battery и history — карточка читает из attributes этого sensor.
+
+Рекомендуемый YAML карточки:
+
+```yaml
+type: custom:aqara-cube-36-debug-card
+entity: sensor.cube36_aqara_cube_t1_pro_last_action
+show_help: true
+history_size: 5
+```
+
+Если static path интеграции не загружает карточку, скопируй `aqara-cube-36-debug-card.js` в `/config/www/` и добавь `/local/aqara-cube-36-debug-card.js` как JavaScript module resource в dashboard.
