@@ -105,7 +105,7 @@ class CubeRuntime:
             name=self.name,
             manufacturer="Aqara / Lumi",
             model="Aqara Cube T1 Pro",
-            sw_version="36 Actions 0.1.2-test",
+            sw_version="36 Actions 0.1.3-test",
         )
 
     async def async_start(self) -> None:

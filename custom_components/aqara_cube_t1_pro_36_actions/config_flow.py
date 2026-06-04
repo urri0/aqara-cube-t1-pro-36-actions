@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from collections.abc import Mapping
 import logging
 from typing import Any
 
@@ -34,6 +35,17 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _safe_copy(value: Any) -> Any:
+    """Copy Home Assistant option mappings without deepcopying mappingproxy objects."""
+    if isinstance(value, Mapping):
+        return {key: _safe_copy(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [_safe_copy(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_safe_copy(item) for item in value)
+    return value
 
 
 def _base_side_conf() -> dict[str, Any]:
@@ -119,7 +131,10 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
         # Home Assistant exposes config_entry as a read-only property on OptionsFlow.
         # Do not assign to self.config_entry; keep our own private reference.
         self._config_entry = config_entry
-        self.options = deepcopy(config_entry.options or _default_options())
+        # config_entry.options is a read-only MappingProxyType on current HA.
+        # deepcopy(mappingproxy) crashes with: TypeError: cannot pickle 'mappingproxy' object.
+        # Convert it recursively to plain dict/list first.
+        self._options = _safe_copy(config_entry.options) if config_entry.options else _default_options()
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
         """Options entry menu."""
@@ -133,7 +148,7 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
                 side = int(section.split("_")[1])
                 return await self._async_step_side(side)
             if section == "save":
-                return self.async_create_entry(title="", data=self.options)
+                return self.async_create_entry(title="", data=self._options)
 
         schema = vol.Schema(
             {
@@ -162,8 +177,8 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             # Options cannot safely mutate config_entry.data. Store a requested topic override in options.
             # Runtime in v0.1.0 still uses config_entry.data; changing topic requires re-adding integration.
-            self.options[CONF_MQTT_TOPIC] = user_input.get(CONF_MQTT_TOPIC, "").strip()
-            self.options[CONF_FRIENDLY_NAME] = user_input.get(CONF_FRIENDLY_NAME, "").strip()
+            self._options[CONF_MQTT_TOPIC] = user_input.get(CONF_MQTT_TOPIC, "").strip()
+            self._options[CONF_FRIENDLY_NAME] = user_input.get(CONF_FRIENDLY_NAME, "").strip()
             return await self.async_step_init()
 
         schema = vol.Schema(
@@ -183,7 +198,7 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
     async def _async_step_side(self, side: int, user_input: dict[str, Any] | None = None):
         """Configure one side."""
         side_key = str(side)
-        sides = self.options.setdefault(CONF_SIDES, {})
+        sides = self._options.setdefault(CONF_SIDES, {})
         conf = sides.setdefault(side_key, _base_side_conf())
         conf.setdefault(CONF_ACTIONS, {action: "" for action in ACTIONS})
 
@@ -244,20 +259,20 @@ class AqaraCube36OptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_diagnostics(self, user_input: dict[str, Any] | None = None):
         """Configure diagnostics."""
-        debounce = self.options.setdefault(CONF_DEBOUNCE, {})
+        debounce = self._options.setdefault(CONF_DEBOUNCE, {})
 
         if user_input is not None:
-            self.options[CONF_HISTORY_SIZE] = int(user_input[CONF_HISTORY_SIZE])
-            self.options[CONF_SHOW_HELP] = bool(user_input.get(CONF_SHOW_HELP))
+            self._options[CONF_HISTORY_SIZE] = int(user_input[CONF_HISTORY_SIZE])
+            self._options[CONF_SHOW_HELP] = bool(user_input.get(CONF_SHOW_HELP))
             for action in [*ACTIONS, "flip90", "flip180"]:
                 debounce[action] = float(user_input.get(f"debounce_{action}", debounce.get(action, 0)))
             return await self.async_step_init()
 
         schema_dict: dict[Any, Any] = {
-            vol.Required(CONF_HISTORY_SIZE, default=int(self.options.get(CONF_HISTORY_SIZE, 10))): selector.NumberSelector(
+            vol.Required(CONF_HISTORY_SIZE, default=int(self._options.get(CONF_HISTORY_SIZE, 10))): selector.NumberSelector(
                 selector.NumberSelectorConfig(min=5, max=50, step=5, mode=selector.NumberSelectorMode.BOX)
             ),
-            vol.Optional(CONF_SHOW_HELP, default=bool(self.options.get(CONF_SHOW_HELP, True))): bool,
+            vol.Optional(CONF_SHOW_HELP, default=bool(self._options.get(CONF_SHOW_HELP, True))): bool,
         }
         for action in [*ACTIONS, "flip90", "flip180"]:
             schema_dict[vol.Optional(f"debounce_{action}", default=float(debounce.get(action, 0)))] = selector.NumberSelector(

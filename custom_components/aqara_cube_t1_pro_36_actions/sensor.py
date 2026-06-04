@@ -27,7 +27,9 @@ async def async_setup_entry(
 class Cube36Sensor(SensorEntity):
     """Diagnostic sensor backed by CubeRuntime."""
 
-    _attr_has_entity_name = True
+    # Keep entity_id generation independent from the Home Assistant device name.
+    # This prevents collisions with existing user helpers like aqara_cube_t1_pro_* .
+    _attr_has_entity_name = False
 
     def __init__(self, runtime: CubeRuntime, key: str, cfg: dict[str, Any]) -> None:
         self.runtime = runtime
@@ -38,13 +40,14 @@ class Cube36Sensor(SensorEntity):
             icon=cfg.get("icon"),
             native_unit_of_measurement=cfg.get("unit"),
         )
-        # v0.1.2-test: include the public cube36 namespace in unique_id too.
-        # Home Assistant keeps old entity_id values in the entity registry for the
-        # same unique_id, so changing only suggested_object_id is not enough after
-        # an earlier test install. This intentionally creates clean diagnostic
-        # entities like sensor.cube36_<cube_name>_last_action.
-        self._attr_unique_id = f"{runtime.entry_id}_{runtime.entity_prefix}_{key}"
+        # v0.1.3-test:
+        # Use both unique_id and suggested_object_id with cube36_ namespace.
+        # _attr_has_entity_name is False, so HA should generate object_id from
+        # suggested_object_id directly, e.g.:
+        # sensor.cube36_aqara_cube_t1_pro_last_action
+        self._attr_unique_id = f"cube36_{runtime.entry_id}_{runtime.entity_prefix}_{key}"
         self._attr_suggested_object_id = f"{runtime.entity_prefix}_{key}"
+        self._attr_name = f"{runtime.entity_prefix} {cfg['name']}"
         self._attr_device_info = runtime.device_info
         self._remove_listener = None
 
