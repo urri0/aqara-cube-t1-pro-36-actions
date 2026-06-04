@@ -102,10 +102,10 @@ class CubeRuntime:
     def device_info(self) -> DeviceInfo:
         return DeviceInfo(
             identifiers={(DOMAIN, self.entry_id)},
-            name=self.name,
+            name=f"Cube36 {self.name}",
             manufacturer="Aqara / Lumi",
             model="Aqara Cube T1 Pro",
-            sw_version="36 Actions 0.1.3-test",
+            sw_version="36 Actions 0.1.4-test",
         )
 
     async def async_start(self) -> None:
