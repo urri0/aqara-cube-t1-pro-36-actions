@@ -111,9 +111,22 @@ class AqaraCube36DebugCard extends HTMLElement {
     const lastTime = this._attr('last_event_time');
 
     let history = main.attributes?.event_history;
+    if (typeof history === 'string' && history.trim()) {
+      history = history.split('\n').map((x) => x.trim()).filter(Boolean);
+    }
     if (!Array.isArray(history)) {
       const historyEntity = this._state(this._sensor('event_history'));
-      history = historyEntity?.attributes?.history || [];
+      const attrHistory = historyEntity?.attributes?.history;
+      if (Array.isArray(attrHistory)) {
+        history = attrHistory;
+      } else if (typeof attrHistory === 'string' && attrHistory.trim()) {
+        history = attrHistory.split('\n').map((x) => x.trim()).filter(Boolean);
+      } else {
+        const stateHistory = historyEntity?.state;
+        history = stateHistory && !['unknown', 'unavailable', 'none', 'None', ''].includes(String(stateHistory))
+          ? [String(stateHistory)]
+          : [];
+      }
     }
 
     const [icon, background] = this._actionStyle(String(action));

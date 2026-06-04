@@ -16,4 +16,4 @@ Includes diagnostic/training Lovelace card to help users learn real cube gesture
 Русский: интеграция превращает Aqara Cube T1 Pro в понятный 6-сторонний контроллер для Home Assistant. Сторона выбирает контекст, жест выполняет команду внутри контекста.
 
 
-Current test line: v0.1.5-test. Debug card is single-entity based and reads diagnostics from the last_action sensor attributes.
+Current test line: v0.1.6-test. Debug card is single-entity based and reads diagnostics from the last_action sensor attributes.

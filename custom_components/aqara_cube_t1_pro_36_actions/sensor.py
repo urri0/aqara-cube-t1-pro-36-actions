@@ -69,32 +69,33 @@ class Cube36Sensor(SensorEntity):
             return value or "none"
         return value
 
-@property
-def extra_state_attributes(self) -> dict[str, Any] | None:
-    """Expose full diagnostic payload on the main last_action sensor.
 
-    v0.1.5-test:
-    The Lovelace debug/training card is intentionally single-entity based.
-    It receives only sensor.<cube>_last_action and reads all other data from
-    attributes. Sibling diagnostic sensors are still created for the HA device
-    page, but the card no longer depends on guessing their entity_ids.
-    """
-    if self.key == "event_history":
-        return {"history": list(self.runtime.history)}
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Expose full diagnostic payload on the main last_action sensor.
 
-    if self.key == "last_action":
-        return {
-            "active_side": self.runtime.data.get("active_side"),
-            "last_side": self.runtime.data.get("last_side"),
-            "last_from_side": self.runtime.data.get("last_from_side"),
-            "last_angle": self.runtime.data.get("last_angle"),
-            "last_lqi": self.runtime.data.get("last_lqi"),
-            "battery": self.runtime.data.get("battery"),
-            "voltage": self.runtime.data.get("voltage"),
-            "operation_mode": self.runtime.data.get("operation_mode"),
-            "event_count": self.runtime.data.get("event_count"),
-            "last_event_time": self.runtime.data.get("last_event_time"),
-            "event_history": list(self.runtime.history),
-        }
+        v0.1.6-test:
+        The Lovelace debug/training card is intentionally single-entity based.
+        It receives only sensor.<cube>_last_action and reads all other data from
+        attributes. Sibling diagnostic sensors are still created for the HA device
+        page, but the card no longer depends on guessing their entity_ids.
+        """
+        if self.key == "event_history":
+            return {"history": list(self.runtime.history)}
 
-    return None
+        if self.key == "last_action":
+            return {
+                "active_side": self.runtime.data.get("active_side"),
+                "last_side": self.runtime.data.get("last_side"),
+                "last_from_side": self.runtime.data.get("last_from_side"),
+                "last_angle": self.runtime.data.get("last_angle"),
+                "last_lqi": self.runtime.data.get("last_lqi"),
+                "battery": self.runtime.data.get("battery"),
+                "voltage": self.runtime.data.get("voltage"),
+                "operation_mode": self.runtime.data.get("operation_mode"),
+                "event_count": self.runtime.data.get("event_count"),
+                "last_event_time": self.runtime.data.get("last_event_time"),
+                "event_history": list(self.runtime.history),
+            }
+
+        return None

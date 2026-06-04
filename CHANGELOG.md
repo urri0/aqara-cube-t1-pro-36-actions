@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.6-test] - 2026-06-04
+
+### Fixed
+- Fixed `extra_state_attributes` indentation in `sensor.py`; `last_action` now exposes full diagnostic attributes correctly.
+- Lovelace debug/training card history now works from `sensor.cube36_*_last_action` attributes.
+- Added defensive history fallback in the card: if attributes are unavailable, it can still display the state/attributes of the sibling `event_history` sensor.
+
+### Notes
+- Backend MQTT/event handling remains unchanged from the working test line.
+- Card remains single-entity based: use only `sensor.cube36_*_last_action` in Lovelace YAML.
+
+
 ## [0.1.5-test] - 2026-06-04
 
 ### Fixed

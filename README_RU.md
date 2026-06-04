@@ -427,7 +427,7 @@ Aqara Cube T1 Pro является названием продукта / тор�
 MIT License.
 
 
-## Примечание v0.1.5-test
+## Примечание v0.1.6-test
 
 Lovelace debug/training card теперь работает в single-entity режиме. В карточку указывается только `*_last_action` sensor; остальные данные — side, angle, radio, battery и history — карточка читает из attributes этого sensor.
 
